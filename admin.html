@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TabyMakeup - Administración</title>
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="icon" href="logo.png" type="image/webp">
+</head>
+<body>
+    <header class="admin-header">
+      <div class="logo-container">
+        <h1 class="logo">
+          <span class="nombre">Taby</span><span class="makeup">Makeup</span>
+        </h1>
+        <span class="admin-title">Panel de Administración</span>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="volver-tienda">
+          <i class="fas fa-arrow-left"></i> Volver a la Tienda
+        </a>
+        <button id="logout-btn" class="btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
+      </div>
+    </header>
+
+  <main class="admin-main">
+    <section class="admin-container">
+      <!-- Botón para agregar producto -->
+      <button id="agregar-producto-btn" class="btn-add-product">
+        <i class="fas fa-plus"></i> Agregar Nuevo Producto
+      </button>
+
+      <!-- Tabla de productos -->
+      <div class="card table-card">
+        <div class="table-header">
+          <h2><i class="fas fa-list"></i> Productos Existentes</h2>
+          <div class="table-search">
+            <input type="text" id="table-search" placeholder="Buscar producto...">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="tabla-productos">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Disponible</th>
+                <th>Imagen</th>
+                <th>Tonos</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+              <!-- Productos se cargarán dinámicamente aquí -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal para agregar/editar productos -->
+    <div id="modal-producto" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">×</span>
+        <h2 id="form-title"><i class="fas fa-plus-circle"></i> Agregar Producto</h2>
+        <form id="form-producto">
+          <input type="hidden" id="producto-id">
+          
+          <div class="form-group">
+            <label for="nombre">Nombre del Producto</label>
+            <input type="text" id="nombre" placeholder="Ej: Base Mate" required>
+          </div>
+
+          <div class="form-group">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" required>
+              <option value="">Selecciona una categoría</option>
+              <option value="iluminadores">Iluminadores y contornos</option>
+              <option value="base">Base</option>
+              <option value="brochas">Brochas</option>
+              <option value="delineadores">Delineadores</option>
+              <option value="fijador">Fijador</option>
+              <option value="mascara">Máscara de pestañas</option>
+              <option value="polvos">Polvos</option>
+              <option value="rubor">Rubor</option>
+              <option value="sombras">Sombras</option>
+              <option value="arqueadores">Arqueadores</option>
+              <option value="brillos">Brillos/Glitter</option>
+              <option value="correctores">Correctores</option>
+              <option value="esponjitas">Esponjitas</option>
+              <option value="labiales">Labiales</option>
+              <option value="pestanas-cejas">Pestañas/Cejas</option>
+              <option value="primer">Primer</option>
+              <option value="skincare">Skincare</option>
+              <option value="uñas">Uñas</option>
+              <option value="skalas">Skalas</option>
+              <option value="varios">Varios</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="precio">Precio ($)</label>
+            <input type="number" id="precio" step="0.01" placeholder="Ej: 1500.00" required>
+          </div>
+
+          <div class="form-group">
+            <label for="imagen">URL de la Imagen</label>
+            <input type="text" id="imagen" placeholder="Pega la URL de la imagen" required>
+            <div class="image-preview">
+              <img id="imagen-preview" src="" alt="Previsualización de la imagen" style="display: none;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción (opcional)</label>
+            <textarea id="descripcion" placeholder="Describe el producto..."></textarea>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label for="disponible">Disponible</label>
+            <input type="checkbox" id="disponible" checked>
+          </div>
+
+          <div class="form-group tonos-group">
+            <label>Tonos (opcional)</label>
+            <div id="tonos-container"></div>
+            <button type="button" id="agregar-tono" class="btn-secondary"><i class="fas fa-plus"></i> Agregar Tono</button>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar Producto</button>
+            <button type="button" id="cancelar-edicion" class="btn-secondary" style="display: none;">Cancelar Edición</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="admin-footer">
+    <div class="footer-redes">
+      <a href="https://www.instagram.com/taby.makeup/" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.facebook.com/" target="_blank" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://wa.me/5493735401893?text=Hola%20quiero%20hacer%20una%20consulta" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
+    <p>© 2025 TabyMakeup. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
